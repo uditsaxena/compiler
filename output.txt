@@ -1,0 +1,322 @@
+.model small
+.stack
+
+.code
+
+_read proc
+    mov dx, offset inputbuf
+    mov bx, dx
+    mov byte ptr[bx], 10
+    mov ah, 0ah
+    int 21h
+    
+    mov ah, 02h
+    mov dl, 10
+    int 21h
+    
+    mov bx, offset inputbuf + 1
+    mov cx, 0
+    mov cl, [bx]
+    mov ax, 0
+    _getdigitfrombuf:
+        inc bx
+        mov dx, 10
+        mul dx
+        mov dh, 0
+        mov dl, [bx]
+        sub dx, 48
+        add ax, dx
+        
+        loop _getdigitfrombuf
+    ret
+_read endp
+
+_write proc
+    mov bx, ax
+    and bx, 8000h
+    cmp bx, 0
+    je _writesignhandled
+    not ax
+    add ax, 1
+    mov bx, ax
+    mov ah, 02h
+    mov dl, 45
+    int 21h
+    mov ax, bx
+    
+    _writesignhandled:
+    mov cx, 0
+    mov bx, 10
+    mov dx, 0
+    _getdigitfromnum:
+        div bx
+        
+        push dx
+        inc cx
+        
+        mov dx, 0
+        
+        cmp ax, 0
+        jne _getdigitfromnum
+        
+        mov ah, 02h
+    
+    _writedigit:
+        pop dx
+        add dl, 48
+        int 21h
+        
+        dec cx
+        cmp cx, 0
+        jne _writedigit
+    ret
+_write endp
+
+main proc
+
+mov ax, seg inputbuf
+mov ds, ax
+
+mov ax,R_V_a1
+push ax
+mov ax,5
+mov bx, ax
+pop ax
+add ax, bx
+
+mov bx, R_V_a1
+
+mov bx, R_V_a1
+
+call _read
+mov ax, V_reaal
+
+call _read
+mov ax, V_imaginary
+
+mov ax, "The Sum is: "
+INT 10h ;Print the string
+mov ax, V_reaal
+
+call _write
+INT 10h ;Print the value of the variable
+mov ax, "added to i"
+INT 10h ;Print the string
+mov ax, V_complex
+
+call _write
+INT 10h ;Print the value of the variable
+mov bx, A_num
+
+mov ax, A_num
+push ax
+mov ax, A_num
+mov bx, ax
+pop ax
+mul ax, bx
+mov bx, A_num
+
+mov ax, R_sum
+
+push ax
+mov ax, 0
+
+mov bx, ax
+pop ax
+cmp ax, bx
+pushf
+pop ax
+and ax, 0040h
+mov cl, 6
+shr al, cl
+
+cmp ax, 0
+je ELSE
+mov ax, "This is a real No."
+INT 10h ;Print the string
+jmp ENDIF
+ELSE:
+mov ax, "This is a complex Number"
+INT 10h ;Print the string
+ENDIF:
+
+STARTLOOP:
+mov ax, R_sum
+
+push ax
+mov ax, 0
+
+mov bx, ax
+pop ax
+cmp ax, bx
+pushf
+pop ax
+and ax, 0040
+mov cl, 6
+shr al, cl
+not al
+and ax, 0001h
+
+cmp ax, 0
+je ENDLOOP
+mov ax, V_real
+
+call _write
+INT 10h ;Print the value of the variable
+mov ax, R_sum
+
+push ax
+mov ax, 0
+
+mov bx, ax
+pop ax
+cmp ax, bx
+pushf
+pop ax
+mov bl, al
+and ax, 0880h
+mov cl, 3
+shr ah, cl
+mov cl, 7
+shr al, cl
+xor al, ah
+not al
+and al, 01h
+not bl
+and bl, 40h
+mov cl,6
+shr bl, cl
+and al, bl
+mov ah, 0
+
+cmp ax, 0
+je ELSEIF1
+mov ax, R_sum
+push ax
+mov ax, 1
+mov bx, ax
+pop ax
+sub ax, bx
+
+mov bx, R_sum
+
+ELSEIF1:
+mov ax, R_sum
+
+push ax
+mov ax, 0
+
+mov bx, ax
+pop ax
+cmp ax, bx
+pushf
+pop ax
+mov bl, al
+and ax, 0880h
+mov cl, 3
+shr ah, cl
+mov cl, 7
+shr al, cl
+xor al, ah
+not al
+and al, 01h
+not bl
+and bl, 40h
+mov cl,6
+shr bl, cl
+and al, bl
+mov ah, 0
+
+cmp ax, 0
+je ELSEIF2
+mov ax, R_sum
+push ax
+mov ax, 1
+mov bx, ax
+pop ax
+sub ax, bx
+
+ELSEIF2:
+mov ax, R_sum
+
+push ax
+mov ax, 0
+
+mov bx, ax
+pop ax
+cmp ax, bx
+pushf
+pop ax
+mov bl, al
+and ax, 0880h
+mov cl, 3
+shr ah, cl
+mov cl, 7
+shr al, cl
+xor al, ah
+not al
+and al, 01h
+not bl
+and bl, 40h
+mov cl,6
+shr bl, cl
+and al, bl
+mov ah, 0
+
+cmp ax, 0
+je ELSE
+mov ax, R_sum
+
+push ax
+mov ax, 0
+
+mov bx, ax
+pop ax
+cmp ax, bx
+pushf
+pop ax
+mov bl, al
+and ax, 0880h
+mov cl, 3
+shr ah, cl
+mov cl, 7
+shr al, cl
+xor al, ah
+not al
+and al, 01h
+not bl
+and bl, 40h
+mov cl,6
+shr bl, cl
+and al, bl
+mov ah, 0
+
+mov ax, R_sum
+push ax
+mov ax, 1
+mov bx, ax
+pop ax
+sub ax, bx
+
+mov bx, R_sum
+
+jmp ENDIF
+ELSE:
+mov ax,R_sum
+push ax
+mov ax,1
+mov bx, ax
+pop ax
+add ax, bx
+
+mov bx, R_sum
+
+ENDIF:
+
+jmp STARTLOOP
+ENDLOOP:
+
+.data
+inputbuf db 12 dup(0)
+
+end main

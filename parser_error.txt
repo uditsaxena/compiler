@@ -1,0 +1,56 @@
+record R_complex_no
+         var int V_reaal;
+         var int V_imaginary;
+end_record
+
+global var real V_pi;
+assign V_pi : 3.14;
+
+function F_add_complex_nos
+      input [var record R_complex_no V_c1, var record R_complex_no V_c2]
+      output [var record R_complex_no V_c]
+      assign R_c.V_reaal : R_c1.V_reaal + R_c2.V_reaal;
+      assign R_c.V_complex : R_c1.V_complex + R_c2.V_complex;
+end_function
+
+main
+	var record R_complex_no V_a1,V_b1,V_sum;
+    var int V_x,V_y;
+    array int  A_num[5];
+    
+    assign R_a1.V_reaal: 2;
+	assign R_a1.V_imginary: 4;
+	
+	get R_b1.V_reaal;			
+	get R_b1.V_imaginary;
+				
+	call F_add_complex_no [V_a1,V_b1] [V_sum];
+		
+	puts "The Sum is: ";                                   
+	put R_sum.V_reaal;			
+	puts  "added to i"; 
+	put R_sum.V_complex;
+	
+	get A_num[0];
+	get A_num[1];
+	get A_num[2];
+	
+	assign A_num[3] : 5;
+	assign A_num[4] : A_num[0]*A_num[1];
+	
+	if(R_sum.V_complex ==0)
+    	puts"This is a real No.";
+	elseif(R_sum.V_reaal ==0)
+    	puts "This is imaginary number";
+	else 
+    	puts" This is a complex Number";
+	end_if
+	
+	while  (R_sum.V_real !=0)
+     put R_sum.V_real;
+     if(R_sum.V_real>0)
+           assign R_sum.V_real : R_sum.V_real-1;
+     else 
+           assign R_sum.V_real : R_sum.V_reaal+1;
+     end_if
+end_main
