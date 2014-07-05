@@ -20,3 +20,7 @@ Code generation done in output.txt
 All output except code generation done on stdout, standard output.
 
 
+
+---
+NOTE: main.py still has to be properly coded broken into the correct modules.
+This is just for simulation.
