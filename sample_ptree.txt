@@ -1,0 +1,4 @@
+main
+	var int V_a;
+	assign V_a: 5;
+end_main
